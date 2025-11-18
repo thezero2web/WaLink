@@ -761,6 +761,27 @@ Example:
                         </button>
                     </div>
                 </div>
+
+                <!-- Country Checker -->
+                <div class="country-checker-section" style="margin-top:20px;">
+                    <h3><i class="fas fa-search"></i> Country Checker</h3>
+                    <p style="color:var(--gray); margin-bottom:10px;">Enter a full phone number (with or without '+') or choose a dialing code to inspect country info and basic validation.</p>
+
+                    <div class="input-with-prefix">
+                        <div class="prefix">+</div>
+                        <input type="text" id="countryCheckInput" placeholder="e.g. +14155552671 or 1" />
+                    </div>
+
+                    <label for="countryCheckSelect" style="display:block; margin-top:10px; margin-bottom:6px;">Or select a country:</label>
+                    <select id="countryCheckSelect" class="country-code-select"></select>
+
+                    <div class="button-group" style="margin-top:12px;">
+                        <button class="btn-primary" onclick="checkCountry()"><i class="fas fa-search"></i> Check</button>
+                        <button class="btn-secondary" onclick="clearCountryChecker()"><i class="fas fa-eraser"></i> Clear</button>
+                    </div>
+
+                    <div id="countryCheckResult" style="display:none; margin-top:12px;"></div>
+                </div>
             </div>
         </div>
 
@@ -850,6 +871,8 @@ Example:
 
             // Set default country code based on user's timezone or locale
             setDefaultCountryCode();
+            // Populate country checker select
+            populateCountryCheckSelect();
         });
 
         function setDefaultCountryCode() {
