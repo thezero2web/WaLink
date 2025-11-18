@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -346,8 +347,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .loading-text {
@@ -611,33 +617,34 @@
             h1 {
                 font-size: 2rem;
             }
-            
+
             .card {
                 padding: 20px;
             }
-            
+
             .button-group {
                 flex-direction: column;
             }
-            
+
             button {
                 width: 100%;
             }
-            
+
             .dialog-body {
                 padding: 20px;
             }
-            
+
             .dialog-actions {
                 flex-direction: column;
             }
-            
+
             .qr-code-actions {
                 flex-direction: column;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -647,7 +654,8 @@
                 </div>
                 <div>
                     <h1>WhatsApp Link Generator</h1>
-                    <p class="subtitle">Convert phone numbers to clickable WhatsApp links instantly. Perfect for marketing, customer service, and more.</p>
+                    <p class="subtitle">Convert phone numbers to clickable WhatsApp links instantly. Perfect for
+                        marketing, customer service, and more.</p>
                 </div>
             </div>
         </header>
@@ -655,7 +663,7 @@
         <div class="main-content">
             <div class="card">
                 <h2><i class="fas fa-edit"></i> Input Numbers</h2>
-                
+
                 <div class="single-number-section">
                     <h3><i class="fas fa-mobile-alt"></i> Quick Single Number</h3>
                     <div class="input-with-prefix">
@@ -666,7 +674,7 @@
                         <i class="fas fa-plus"></i> Add to List
                     </button>
                 </div>
-                
+
                 <div class="country-code-section">
                     <label for="countryCode">Default Country Code:</label>
                     <select id="countryCode" class="country-code-select">
@@ -688,14 +696,14 @@
                         <option value="52">Mexico (+52)</option>
                     </select>
                 </div>
-                
+
                 <textarea id="numberInput" placeholder="Paste your numbers here (one per line or space-separated)
 
 Example:
 14155552671
 447911123456
 4915123456789"></textarea>
-                
+
                 <div class="button-group">
                     <button class="btn-primary" onclick="convertNumbers()">
                         <i class="fas fa-bolt"></i> Generate Links
@@ -726,7 +734,7 @@ Example:
                 <div class="counter" id="counter">
                     <i class="fas fa-link"></i> 0 links generated in last session
                 </div>
-                
+
                 <div class="button-group">
                     <button class="btn-outline" onclick="showPreviousResults()">
                         <i class="fas fa-eye"></i> Show Previous Results
@@ -738,7 +746,7 @@ Example:
                         <i class="fas fa-qrcode"></i> Generate QR Code
                     </button>
                 </div>
-                
+
                 <div class="qr-code-section" id="qrCodeSection" style="display: none;">
                     <h3><i class="fas fa-qrcode"></i> QR Code</h3>
                     <div class="qr-code-container">
@@ -830,16 +838,16 @@ Example:
         let qrCodeGenerated = false;
 
         // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Check if there are numbers in URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const numbersParam = urlParams.get('numbers');
-            
+
             if (numbersParam) {
                 document.getElementById('numberInput').value = numbersParam;
                 convertNumbers();
             }
-            
+
             // Set default country code based on user's timezone or locale
             setDefaultCountryCode();
         });
@@ -859,19 +867,19 @@ Example:
         function addSingleNumber() {
             const singleNumberInput = document.getElementById('singleNumber');
             const number = singleNumberInput.value.trim().replace(/[^\d]/g, '');
-            
+
             if (!number) {
                 showError('Please enter a phone number');
                 return;
             }
-            
+
             const textarea = document.getElementById('numberInput');
             if (textarea.value.trim() !== '') {
                 textarea.value += '\n' + number;
             } else {
                 textarea.value = number;
             }
-            
+
             singleNumberInput.value = '';
             showSuccess('Number added to list');
         }
@@ -879,7 +887,7 @@ Example:
         function convertNumbers() {
             const input = document.getElementById('numberInput').value.trim();
             const countryCode = document.getElementById('countryCode').value;
-            
+
             if (!input) {
                 showError('Please enter some phone numbers');
                 return;
@@ -887,12 +895,12 @@ Example:
 
             // Parse numbers
             let numbers = input.split(/[\n\s]+/).filter(num => num.trim() !== '');
-            
+
             // Apply default country code if needed
             if (countryCode) {
                 numbers = numbers.map(num => {
                     // If number doesn't start with a country code, add the default one
-                    if (!num.startsWith('1') && !num.startsWith('44') && !num.startsWith('91') && 
+                    if (!num.startsWith('1') && !num.startsWith('44') && !num.startsWith('91') &&
                         !num.startsWith('86') && !num.startsWith('81') && !num.startsWith('49') &&
                         !num.startsWith('33') && !num.startsWith('39') && !num.startsWith('34') &&
                         !num.startsWith('55') && !num.startsWith('61') && !num.startsWith('64') &&
@@ -902,7 +910,7 @@ Example:
                     return num;
                 });
             }
-            
+
             // Limit to 50 numbers
             if (numbers.length > 50) {
                 numbers = numbers.slice(0, 50);
@@ -911,10 +919,10 @@ Example:
 
             // Calculate loading time based on number count
             const loadingTime = calculateLoadingTime(numbers.length);
-            
+
             // Show loading overlay
             showLoadingOverlay(loadingTime, numbers.length);
-            
+
             // Process numbers after loading time
             setTimeout(() => {
                 processNumbers(numbers);
@@ -936,13 +944,13 @@ Example:
             const timer = document.getElementById('timer');
             const progress = document.getElementById('progress');
             const processingInfo = document.getElementById('processingInfo');
-            
+
             overlay.style.display = 'flex';
             timer.textContent = `${seconds}s`;
             progress.style.width = '0%';
-            
+
             processingInfo.textContent = `Processing ${numberCount} numbers...`;
-            
+
             // Animate progress bar
             let timeLeft = seconds;
             const interval = setInterval(() => {
@@ -950,7 +958,7 @@ Example:
                 const progressPercent = ((seconds - timeLeft) / seconds) * 100;
                 progress.style.width = `${progressPercent}%`;
                 timer.textContent = `${timeLeft}s`;
-                
+
                 if (timeLeft <= 0) {
                     clearInterval(interval);
                 }
@@ -966,10 +974,10 @@ Example:
             currentResults = [];
             let validCount = 0;
             let invalidNumbers = [];
-            
+
             numbers.forEach(number => {
                 const cleanNumber = number.trim().replace(/[^\d]/g, '');
-                
+
                 if (cleanNumber.length >= 8 && cleanNumber.length <= 15) {
                     const whatsappLink = `https://wa.me/${cleanNumber}`;
                     currentResults.push({
@@ -984,7 +992,7 @@ Example:
 
             // Hide loading overlay and show results
             hideLoadingOverlay();
-            
+
             if (validCount === 0) {
                 showError('No valid phone numbers found. Please check your input.');
             } else {
@@ -995,7 +1003,7 @@ Example:
                 showSuccess(successMessage);
                 updatePreviousResults();
                 showResultsDialog(validCount);
-                
+
                 // Update URL with the numbers
                 const urlParams = new URLSearchParams();
                 urlParams.set('numbers', numbers.join('\n'));
@@ -1008,10 +1016,10 @@ Example:
             const dialog = document.getElementById('resultsDialog');
             const dialogResults = document.getElementById('dialogResults');
             const dialogStats = document.getElementById('dialogStats');
-            
+
             // Clear previous results
             dialogResults.innerHTML = '';
-            
+
             // Add links to dialog
             currentResults.forEach(result => {
                 const linkElement = document.createElement('a');
@@ -1020,13 +1028,13 @@ Example:
                 linkElement.innerHTML = `<i class="fab fa-whatsapp"></i> ${result.link}`;
                 linkElement.target = '_blank';
                 linkElement.rel = 'noopener noreferrer';
-                
+
                 dialogResults.appendChild(linkElement);
             });
-            
+
             // Update stats
             dialogStats.innerHTML = `<i class="fas fa-check-circle"></i> ${validCount} WhatsApp links generated successfully!`;
-            
+
             // Show dialog
             dialog.style.display = 'block';
         }
@@ -1043,7 +1051,7 @@ Example:
             }
 
             const linksText = currentResults.map(result => result.link).join('\n');
-            
+
             navigator.clipboard.writeText(linksText).then(() => {
                 showSuccess(`Copied ${currentResults.length} links to clipboard!`);
                 closeResultsDialog();
@@ -1059,7 +1067,7 @@ Example:
             }
 
             const linksText = currentResults.map(result => result.link).join('\n');
-            
+
             navigator.clipboard.writeText(linksText).then(() => {
                 showSuccess(`Copied ${currentResults.length} links to clipboard!`);
             }).catch(err => {
@@ -1070,13 +1078,13 @@ Example:
         function updatePreviousResults() {
             const resultsContainer = document.getElementById('resultsContainer');
             const counter = document.getElementById('counter');
-            
+
             // Clear previous results
             resultsContainer.innerHTML = '';
-            
+
             // Add current results (limited to last 10 for display)
             const displayResults = currentResults.slice(-10);
-            
+
             if (displayResults.length === 0) {
                 resultsContainer.innerHTML = '<div class="loading"><i class="fas fa-exclamation-circle"></i> No valid links generated</div>';
             } else {
@@ -1087,11 +1095,11 @@ Example:
                     linkElement.innerHTML = `<i class="fab fa-whatsapp"></i> ${result.link}`;
                     linkElement.target = '_blank';
                     linkElement.rel = 'noopener noreferrer';
-                    
+
                     resultsContainer.appendChild(linkElement);
                 });
             }
-            
+
             counter.innerHTML = `<i class="fas fa-link"></i> ${currentResults.length} links generated in current session`;
         }
 
@@ -1109,10 +1117,10 @@ Example:
             document.getElementById('resultsContainer').innerHTML = '<div class="loading"><i class="fas fa-clock"></i> Your generated links will appear here after conversion...</div>';
             document.getElementById('counter').innerHTML = '<i class="fas fa-link"></i> 0 links generated in last session';
             currentResults = [];
-            
+
             // Clear URL parameters
             window.history.replaceState({}, '', window.location.pathname);
-            
+
             // Hide QR code if visible
             hideQRCode();
         }
@@ -1122,12 +1130,12 @@ Example:
                 showError('No links available to generate QR code. Please generate links first.');
                 return;
             }
-            
+
             // For multiple links, use the first one for QR code
             const firstLink = currentResults[0].link;
             const qrCodeSection = document.getElementById('qrCodeSection');
             const canvas = document.getElementById('qrCodeCanvas');
-            
+
             // Generate QR code
             QRCode.toCanvas(canvas, firstLink, {
                 width: 200,
@@ -1136,7 +1144,7 @@ Example:
                     dark: '#25D366',
                     light: '#ffffff'
                 }
-            }, function(error) {
+            }, function (error) {
                 if (error) {
                     showError('Failed to generate QR code. Please try again.');
                     console.error(error);
@@ -1153,7 +1161,7 @@ Example:
                 showError('No QR code available to download. Please generate one first.');
                 return;
             }
-            
+
             const canvas = document.getElementById('qrCodeCanvas');
             const link = document.createElement('a');
             link.download = 'whatsapp-qr-code.png';
@@ -1169,13 +1177,13 @@ Example:
 
         function showError(message) {
             removeExistingMessages();
-            
+
             const errorDiv = document.createElement('div');
             errorDiv.className = 'error';
             errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
-            
+
             document.querySelector('.main-content').appendChild(errorDiv);
-            
+
             setTimeout(() => {
                 errorDiv.remove();
             }, 5000);
@@ -1183,13 +1191,13 @@ Example:
 
         function showSuccess(message) {
             removeExistingMessages();
-            
+
             const successDiv = document.createElement('div');
             successDiv.className = 'success';
             successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-            
+
             document.querySelector('.main-content').appendChild(successDiv);
-            
+
             setTimeout(() => {
                 successDiv.remove();
             }, 3000);
@@ -1198,13 +1206,13 @@ Example:
         function removeExistingMessages() {
             const existingError = document.querySelector('.error');
             const existingSuccess = document.querySelector('.success');
-            
+
             if (existingError) existingError.remove();
             if (existingSuccess) existingSuccess.remove();
         }
 
         // Close dialog when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const dialog = document.getElementById('resultsDialog');
             if (event.target === dialog) {
                 closeResultsDialog();
@@ -1212,4 +1220,5 @@ Example:
         });
     </script>
 </body>
+
 </html>
